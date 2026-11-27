@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bruno's List</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: {
+        fontFamily: { sans: ["Inter","sans-serif"], display: ["Outfit","sans-serif"] },
+        colors: {
+          cream: {50:"#FDFBF7",100:"#F8F4EC",200:"#EFE8D8"},
+          lavender: {50:"#F7F5FF",100:"#EFEBFF",200:"#DFD7FF",500:"#8B7AE8",600:"#725EE0",700:"#5A46C7"},
+          peach: {50:"#FFF6F3",100:"#FFECE5",200:"#FFD6C7",500:"#F27D61",600:"#E06346"},
+          sage: {50:"#F3FAF6",100:"#E5F5EC",200:"#C8EBD8",600:"#358562",700:"#27684B"},
+        },
+        boxShadow: { soft:"0 10px 30px -10px rgba(38,34,62,0.08)", tactile:"0 4px 0 0 rgba(30,27,46,0.14)", "tactile-primary":"0 4px 0 0 #533EC2", "tactile-sage":"0 4px 0 0 #1E543D" }
+      }}
+    };
+  </script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="min-h-screen antialiased pb-12">
+  <div id="toast" class="hidden fixed bottom-4 right-4 z-[70] max-w-sm rounded-2xl bg-slate-900 text-white px-4 py-3 shadow-lg text-sm font-semibold"></div>
+  <datalist id="pdfList"></datalist>
+
+  <!-- Add orders card -->
+  <div id="addModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
+    <div class="glass-card w-full max-w-2xl rounded-3xl p-6 border border-lavender-200/70 max-h-[90vh] overflow-auto">
+      <div class="flex justify-between items-start mb-4">
+        <h3 class="font-display font-extrabold text-xl text-slate-900">Add new orders</h3>
+        <button onclick="closeAdd()" class="text-slate-400 text-xl">&times;</button>
+      </div>
+      <div id="addRows" class="space-y-4"></div>
+      <div class="flex flex-wrap gap-2 mt-4">
+        <button onclick="addRow()" class="btn-trendy px-4 py-2 rounded-xl text-sm font-bold bg-white border border-slate-200">Add More</button>
+        <button onclick="commitAdds()" class="btn-trendy px-4 py-2 rounded-xl text-sm font-bold bg-lavender-600 text-white ml-auto">Add to list</button>
+      </div>
+    </div>
+  </div>
+
+  <header class="sticky top-0 z-30 glass-card border-b border-lavender-200/70 shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 py-3.5 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-lavender-600 to-peach-500 flex items-center justify-center text-white">
+          <i data-lucide="clipboard-list" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-display font-extrabold text-2xl text-slate-900">Bruno's List</h1>
+            <span class="suite-badge bg-lavender-100 text-lavender-700 border border-lavender-200">Manager</span>
+          </div>
+          <p class="text-xs text-slate-500">Deploy order lists for Clipboard · unique PO</p>
+        </div>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <button onclick="openAdd()" class="btn-trendy px-3 py-2 rounded-xl text-xs font-bold bg-lavender-600 text-white shadow-tactile-primary">Add New Orders</button>
+        <button onclick="setOrdersFolder()" class="btn-trendy px-3 py-2 rounded-xl text-xs font-bold bg-sage-100 text-sage-700 border border-sage-200">Orders Folder</button>
+        <button onclick="deployOrders()" class="btn-trendy px-3 py-2 rounded-xl text-xs font-bold bg-sage-600 text-white">Deploy Orders</button>
+        <button onclick="viewEditList()" class="btn-trendy px-3 py-2 rounded-xl text-xs font-bold bg-white border border-slate-200">View / Edit list</button>
+        <button onclick="setPdfFolder()" class="btn-trendy px-3 py-2 rounded-xl text-xs font-bold bg-white border border-slate-200">PDF Folder</button>
+        <span id="status" class="text-xs text-slate-400 self-center"></span>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 mt-6 space-y-6">
+    <section class="glass-card rounded-2xl border border-lavender-200/60 overflow-hidden">
+      <div class="px-5 py-4 border-b border-cream-200/80 flex justify-between">
+        <h2 class="font-display font-bold text-lg">Working list <span id="count" class="text-sm text-slate-400"></span></h2>
+        <button onclick="clearList()" class="text-xs font-bold text-rose-600">Clear all</button>
+      </div>
+      <div class="overflow-x-auto px-3 pb-3">
+        <table class="tracker-table">
+          <thead><tr><th>Order date</th><th>Due</th><th>Desig.</th><th>Part #</th><th>Qty</th><th>PO</th><th></th></tr></thead>
+          <tbody id="table"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
